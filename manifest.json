@@ -1,10 +1,11 @@
 {
-  "name": "Buscador",
-  "short_name": "Buscador",
-  "start_url": ".",
+  "name": "FruitSeeker",
+  "short_name": "FruitSeeker",
+  "description": "Buscador ràpid de productes per Part Number, EAN, Barra o text lliure",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#0d6efd",
+  "theme_color": "#0A84FF",
   "icons": [
     {
       "src": "icons/icon-192.png",
