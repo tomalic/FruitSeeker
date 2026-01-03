@@ -1,6 +1,6 @@
 // 🔄 Cambia esta versión en cada despliegue (ej: fecha o número)
 const CACHE_VERSION = 'v-' + new Date().toISOString().slice(0,10); 
-const CACHE_NAME = 'ean-finder-' + CACHE_VERSION;
+const CACHE_NAME = 'fruitseeker' + CACHE_VERSION;
 
 const ASSETS = [
   './',
