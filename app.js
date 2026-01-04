@@ -232,10 +232,15 @@ function doSearch(queryRaw) {
     }
   }
 
-  // Fallback / general search across all fields
-  if (!matches.length) {
-    matches = products.filter(p => (p.__search || "").includes(qNorm));
-  }
+ // Fallback / general search across all fields (all terms, any order)
+if (!matches.length) {
+  const terms = qNorm.split(/\s+/).filter(Boolean); // paraules / trossos
+
+  matches = products.filter(p => {
+    const blob = (p.__search || "");
+    return terms.every(t => blob.includes(t));
+  });
+}
 
   renderResults(q, matches);
 }
