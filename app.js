@@ -508,7 +508,11 @@ document.addEventListener("DOMContentLoaded", () => {
     doSearch(qInput.value);
   });
 
-  document.getElementById("btnBorrar")?.addEventListener("click", clearData);
+  document.getElementById("btnBorrar")?.addEventListener("click", () => {
+  const ok = confirm("¿Seguro que quieres borrar todos los datos cargados?");
+  if (!ok) return;
+  clearData();
+});
 
   document.getElementById("btnInstall")?.addEventListener("click", async () => {
     if (!deferredPrompt) return;
