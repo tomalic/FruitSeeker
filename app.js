@@ -243,7 +243,30 @@ if (!matches.length) {
   });
 }
 
-  renderResults(q, matches);
+// Deduplicate results (avoid repeated articles)
+matches = dedupeMatches(matches);
+
+renderResults(q, matches);
+
+}
+function dedupeMatches(rows) {
+  const seen = new Set();
+  const out = [];
+
+  for (const p of rows) {
+    // Clau de deduplicació (prioritza identificadors “forts” si existeixen)
+    const key =
+      normalize(field(p, "ean")).replace(/\D/g, "") ||
+      normalize(field(p, "part")) ||
+      normalize(field(p, "ref11")).replace(/\D/g, "") ||
+      normalize(field(p, "rapid")) ||
+      normalize(p.__search || "").slice(0, 120); // fallback si no hi ha res
+
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(p);
+  }
+  return out;
 }
 
 function renderResults(query, matches) {
