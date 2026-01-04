@@ -372,12 +372,11 @@ function renderCards(rows, query) {
   return `
     <div class="card mx-auto" style="max-width: 980px;">
       <div class="card-body">
-        <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
-          <div>
-            <div class="fw-semibold">Resultados: ${rows.length}</div>
-            <div class="small text-muted">Búsqueda: <b>${escapeHtml(query)}</b></div>
-          </div>
-        </div>
+        <div class="text-center mb-3">
+  <div class="fw-semibold">Resultados: ${rows.length}</div>
+  <div class="small text-muted">Búsqueda: <b>${escapeHtml(query)}</b></div>
+</div>
+
 
         <div class="d-grid gap-3">
           ${rows.map(r => renderMiniCard(r)).join("")}
