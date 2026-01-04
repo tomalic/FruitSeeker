@@ -306,14 +306,10 @@ function renderQuickCard(p, query) {
           ${ref11 ? `<p class="mb-1"><b>Ref. (11 dígitos)</b><br><span class="fs-5 fw-semibold">${escapeHtml(ref11)}</span></p>` : ""}
                ${ean ? `<div class="fs-5 fw-semibold text-center">EAN ${escapeHtml(ean)}</div>` : ""}
                ${(uneco || familia || barra) ? `
-            <div class="text-center text-muted small mt-2">
-              ${uneco ? `UNECO ${escapeHtml(uneco)}` : ""}
-              ${(uneco && familia) ? " · " : ""}
-              ${familia ? `Familia ${escapeHtml(familia)}` : ""}
-              ${((uneco || familia) && barra) ? " · " : ""}
-              ${barra ? `Barra ${escapeHtml(barra)}` : ""}
-            </div>
-          ` : ""}
+  <div class="fs-5 fw-semibold text-center mt-2">
+    REF: ${[uneco, familia, barra].filter(Boolean).map(escapeHtml).join(" ")}
+  </div>
+` : ""}
 
         </div>
       </div>
