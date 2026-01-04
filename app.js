@@ -507,6 +507,39 @@ document.addEventListener("DOMContentLoaded", () => {
   qInput?.addEventListener("input", () => {
     doSearch(qInput.value);
   });
+const kbdBtn = document.getElementById("kbdToggle");
+
+// mode per defecte: numèric
+let numericMode = true;
+
+function applyKeyboardMode() {
+  if (!qInput) return;
+
+  if (numericMode) {
+    // teclat numèric tipus "phone-pad" (el de la teva captura)
+    qInput.setAttribute("inputmode", "numeric");
+    qInput.setAttribute("pattern", "[0-9]*");
+    qInput.setAttribute("type", "text"); // important: no posar type=number
+    kbdBtn && (kbdBtn.textContent = "ABC");
+  } else {
+    // teclat alfanumèric normal
+    qInput.setAttribute("inputmode", "text");
+    qInput.removeAttribute("pattern");
+    qInput.setAttribute("type", "text");
+    kbdBtn && (kbdBtn.textContent = "123");
+  }
+
+  // re-obrir teclat amb el nou mode
+  qInput.blur();
+  setTimeout(() => qInput.focus(), 0);
+}
+
+applyKeyboardMode();
+
+kbdBtn?.addEventListener("click", () => {
+  numericMode = !numericMode;
+  applyKeyboardMode();
+});
 
   document.getElementById("btnBorrar")?.addEventListener("click", () => {
   const ok = confirm("¿Seguro que quieres borrar todos los datos cargados?");
