@@ -289,15 +289,26 @@ resultsEl.innerHTML = renderCards(matches, query);
 function formatPriceEUR(value) {
   if (value == null || value === "") return "";
 
-  // neteja (per si ve com "31900", "319,00", "319.00", etc.)
-  const num = Number(
-    value
-      .toString()
-      .replace(/\./g, "")
-      .replace(",", ".")
-  );
+  const raw = value.toString().trim();
 
-  if (Number.isNaN(num)) return value;
+  // Si ja ve amb separador decimal ("," o ".") -> tractam com euros directes
+  const hasDecimal = /[.,]\d{1,2}\s*$/.test(raw);
+
+  // Extreure només dígits i separadors per parsejar
+  let cleaned = raw.replace(/\s/g, "");
+
+  let num;
+  if (hasDecimal) {
+    // format europeu o anglès: "319,00" o "319.00"
+    num = Number(cleaned.replace(/\./g, "").replace(",", "."));
+  } else {
+    // si NO hi ha decimals, assumim que ve en cèntims: "31900" -> 319.00
+    const digits = cleaned.replace(/\D/g, "");
+    if (!digits) return raw;
+    num = Number(digits) / 100;
+  }
+
+  if (Number.isNaN(num)) return raw;
 
   return num.toLocaleString("es-ES", {
     minimumFractionDigits: 2,
@@ -385,7 +396,7 @@ function renderMiniCard(p) {
   const part = field(p, "part");
   const ean = field(p, "ean");
   const desc = field(p, "descripcion") || field(p, "nombre") || "";
-  const precio = field(p, "precio");
+  const precio = formatPriceEUR(field(p, "precio"));
   const ref11 = field(p, "ref11");
   const uneco = field(p, "uneco");
   const familia = field(p, "fam");
