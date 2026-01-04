@@ -33,3 +33,6 @@ body { background: #f7f7f9; }
   font-size: 0.85rem;
   color: #6c757d; /* gris Bootstrap */
 }
+.card .text-muted{
+  line-height: 1.3;
+}
