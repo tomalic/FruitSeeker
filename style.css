@@ -24,3 +24,8 @@ body { background: #f7f7f9; }
 .result-row:hover{
   background: rgba(13,110,253,.06);
 }
+.logo-header img.logo-fruitseeker{
+  max-width: 320px;
+  width: 80%;
+  height: auto;
+}
