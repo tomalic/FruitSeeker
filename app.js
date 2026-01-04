@@ -286,6 +286,24 @@ function renderResults(query, matches) {
   // Multiple -> show cards (mobile friendly)
 resultsEl.innerHTML = renderCards(matches, query);
 }
+function formatPriceEUR(value) {
+  if (value == null || value === "") return "";
+
+  // neteja (per si ve com "31900", "319,00", "319.00", etc.)
+  const num = Number(
+    value
+      .toString()
+      .replace(/\./g, "")
+      .replace(",", ".")
+  );
+
+  if (Number.isNaN(num)) return value;
+
+  return num.toLocaleString("es-ES", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + " €";
+}
 
 function renderQuickCard(p, query) {
    const uneco = field(p, "uneco");
@@ -296,7 +314,7 @@ function renderQuickCard(p, query) {
   const ref11 = field(p, "ref11");
   const ean = field(p, "ean");
   const desc = field(p, "descripcion") || field(p, "nombre") || "";
-  const precio = field(p, "precio");
+  const precio = formatPriceEUR(field(p, "precio"));
   const foto = field(p, "foto");
 
   const imgHtml = foto
