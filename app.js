@@ -126,12 +126,17 @@ function clearData() {
 function updateLoadedBadge() {
   const el = document.getElementById("loadedCount");
   if (!el) return;
+
+  const block = el.parentElement; // 👈 conté text + botó
+
   if (!products.length) {
     el.textContent = "Sin datos cargados";
     el.classList.add("text-muted");
+    block.classList.remove("d-none");   // 👈 mostrar bloc
   } else {
     el.textContent = `Datos guardados: ${products.length} filas`;
     el.classList.remove("text-muted");
+    block.classList.add("d-none");      // 👈 amagar text + botó
   }
 }
 
