@@ -291,19 +291,29 @@ function formatPriceEUR(value) {
 
   const raw = value.toString().trim();
 
-  // Si ja ve amb separador decimal ("," o ".") -> tractam com euros directes
-  const hasDecimal = /[.,]\d{1,2}\s*$/.test(raw);
-
-  // Extreure només dígits i separadors per parsejar
-  let cleaned = raw.replace(/\s/g, "");
+  // Si conté coma o punt, assumim que JA és euros (ex: "1.829,00" o "1829,00" o "1829.00")
+  const looksLikeEuros = /[.,]/.test(raw);
 
   let num;
-  if (hasDecimal) {
-    // format europeu o anglès: "319,00" o "319.00"
-    num = Number(cleaned.replace(/\./g, "").replace(",", "."));
+
+  if (looksLikeEuros) {
+    // Format espanyol típic: 1.829,00  -> 1829.00
+    // També admet: 1829,00 / 1829.00
+    let s = raw.replace(/\s/g, "");
+
+    // Si té coma, la coma és decimal; llevam punts de milers
+    if (s.includes(",")) {
+      s = s.replace(/\./g, "").replace(",", ".");
+    } else {
+      // Si NO té coma però té punt, pot ser decimal (EN) o milers.
+      // Heurística: si acaba amb .dd -> decimal, si no, és milers
+      if (!/\.\d{1,2}$/.test(s)) s = s.replace(/\./g, "");
+    }
+
+    num = Number(s);
   } else {
-    // si NO hi ha decimals, assumim que ve en cèntims: "31900" -> 319.00
-    const digits = cleaned.replace(/\D/g, "");
+    // No té cap separador -> assumim cèntims (31900 -> 319.00)
+    const digits = raw.replace(/\D/g, "");
     if (!digits) return raw;
     num = Number(digits) / 100;
   }
