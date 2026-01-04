@@ -25,6 +25,7 @@ const synonyms = {
   precio:['precio','price','pvp','p.v.p.','importe','amount','coste','costo','cost'],
   ref11: ['ref11','ref 11','referencia 11','nuestra referencia','referencia interna','ref','ref.','referencia'],
   dept:  ['departamento','dept','depto','departament'],
+   uneco: ['uneco','u.neco','une','codigo uneco','código uneco'],
   fam:   ['familia','family'],
 };
 
@@ -264,6 +265,9 @@ function renderResults(query, matches) {
 }
 
 function renderQuickCard(p, query) {
+   const uneco = field(p, "uneco");
+  const familia = field(p, "fam");
+  const barra = field(p, "barra");
   const rapid = field(p, "rapid") || "—";
   const part = field(p, "part");
   const ref11 = field(p, "ref11");
@@ -283,8 +287,7 @@ function renderQuickCard(p, query) {
   return `
     <div class="card mx-auto" style="max-width: 680px;">
       <div class="card-body text-center">
-        <div class="small text-muted mb-2">Resultado para <b>${escapeHtml(query)}</b></div>
-
+        
         <div class="header-wrap mb-3">
           ${imgHtml}
           <div>
@@ -292,8 +295,6 @@ function renderQuickCard(p, query) {
             <div class="text-muted">ID rápida</div>
           </div>
         </div>
-
-        ${part ? `<div class="fw-semibold mb-1">${escapeHtml(part)}</div>` : ""}
 
         ${desc ? `<div class="text-muted mb-3">${escapeHtml(desc)}</div>` : ""}
 
@@ -303,7 +304,17 @@ function renderQuickCard(p, query) {
 
         <div class="text-start small" style="max-width: 520px; margin: 0 auto;">
           ${ref11 ? `<p class="mb-1"><b>Ref. (11 dígitos)</b><br><span class="fs-5 fw-semibold">${escapeHtml(ref11)}</span></p>` : ""}
-          ${ean ? `<p class="mb-0"><b>EAN</b><br><span class="fs-5 fw-semibold">${escapeHtml(ean)}</span></p>` : ""}
+               ${ean ? `<div class="fs-5 fw-semibold text-center">EAN ${escapeHtml(ean)}</div>` : ""}
+               ${(uneco || familia || barra) ? `
+            <div class="text-center text-muted small mt-2">
+              ${uneco ? `UNECO ${escapeHtml(uneco)}` : ""}
+              ${(uneco && familia) ? " · " : ""}
+              ${familia ? `Familia ${escapeHtml(familia)}` : ""}
+              ${((uneco || familia) && barra) ? " · " : ""}
+              ${barra ? `Barra ${escapeHtml(barra)}` : ""}
+            </div>
+          ` : ""}
+
         </div>
       </div>
     </div>
