@@ -260,8 +260,8 @@ function renderResults(query, matches) {
     return;
   }
 
-  // Multiple -> show FruitSeeker-like list/table
-  resultsEl.innerHTML = renderTable(matches, query);
+  // Multiple -> show cards (mobile friendly)
+resultsEl.innerHTML = renderCards(matches, query);
 }
 
 function renderQuickCard(p, query) {
@@ -311,6 +311,79 @@ function renderQuickCard(p, query) {
   </div>
 ` : ""}
 
+        </div>
+      </div>
+    </div>
+  `;
+}
+function renderCards(rows, query) {
+  return `
+    <div class="card mx-auto" style="max-width: 980px;">
+      <div class="card-body">
+        <div class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3">
+          <div>
+            <div class="fw-semibold">Resultados: ${rows.length}</div>
+            <div class="small text-muted">Búsqueda: <b>${escapeHtml(query)}</b></div>
+          </div>
+        </div>
+
+        <div class="d-grid gap-3">
+          ${rows.map(r => renderMiniCard(r)).join("")}
+        </div>
+
+        <div class="small text-muted mt-3">
+          Tip: escribe números (4 o 5 dígitos) para una búsqueda rápida por EAN/Barra.
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderMiniCard(p) {
+  const rapid = field(p, "rapid");     // pot ser buit
+  const part = field(p, "part");
+  const ean = field(p, "ean");
+  const desc = field(p, "descripcion") || field(p, "nombre") || "";
+  const precio = field(p, "precio");
+  const ref11 = field(p, "ref11");
+  const uneco = field(p, "uneco");
+  const familia = field(p, "fam");
+  const barra = field(p, "barra");
+  const foto = field(p, "foto");
+
+  const imgHtml = foto
+    ? `<img class="product-img" src="${escapeAttr(foto)}" alt="Foto" onerror="this.style.display='none'">`
+    : "";
+
+  // línies “badge” només si hi ha dades
+  const badges = [];
+  if (part) badges.push(`<span class="ref-badge badge text-bg-light text-dark border">${escapeHtml(part)}</span>`);
+  if (precio) badges.push(`<span class="badge text-bg-primary">${escapeHtml(precio)}</span>`);
+  if (rapid) badges.push(`<span class="badge text-bg-dark">${escapeHtml(rapid)}</span>`);
+
+  // blocs centrats (només si hi ha dades)
+  const eanLine = ean ? `<div class="fw-semibold text-center mt-2">EAN ${escapeHtml(ean)}</div>` : "";
+
+  const refNums = [uneco, familia, barra].filter(Boolean);
+  const refLine = refNums.length
+    ? `<div class="fw-semibold text-center mt-1">REF: ${refNums.map(escapeHtml).join(" ")}</div>`
+    : "";
+
+  const extra = [];
+  if (ref11) extra.push(`<div class="small text-muted">Ref 11: <span class="fw-semibold text-dark">${escapeHtml(ref11)}</span></div>`);
+
+  return `
+    <div class="card">
+      <div class="card-body">
+        <div class="d-flex gap-3 align-items-start">
+          ${imgHtml}
+          <div class="flex-grow-1">
+            ${desc ? `<div class="text-muted">${escapeHtml(desc)}</div>` : ""}
+            ${badges.length ? `<div class="d-flex flex-wrap gap-2 mt-2">${badges.join("")}</div>` : ""}
+            ${eanLine}
+            ${refLine}
+            ${extra.length ? `<div class="mt-2">${extra.join("")}</div>` : ""}
+          </div>
         </div>
       </div>
     </div>
