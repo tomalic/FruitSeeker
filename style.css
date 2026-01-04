@@ -29,3 +29,7 @@ body { background: #f7f7f9; }
   width: 80%;
   height: auto;
 }
+.search-hint{
+  font-size: 0.85rem;
+  color: #6c757d; /* gris Bootstrap */
+}
