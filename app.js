@@ -309,6 +309,11 @@ function formatPriceEUR(value) {
       // Heurística: si acaba amb .dd -> decimal, si no, és milers
       if (!/\.\d{1,2}$/.test(s)) s = s.replace(/\./g, "");
     }
+function padLeft(value, length) {
+  if (value == null || value === "") return "";
+  const s = value.toString().replace(/\D/g, "");
+  return s.padStart(length, "0");
+}
 
     num = Number(s);
   } else {
@@ -327,10 +332,10 @@ function formatPriceEUR(value) {
 }
 
 function renderQuickCard(p, query) {
-   const uneco = field(p, "uneco");
-  const familia = field(p, "fam");
-  const barra = field(p, "barra");
-  const rapid = field(p, "rapid") || "—";
+ const uneco = padLeft(field(p, "uneco"), 3);
+ const familia = padLeft(field(p, "fam"), 3);
+ const barra = padLeft(field(p, "barra"), 5);
+ const rapid = field(p, "rapid") || "—";
   const part = field(p, "part");
   const ref11 = field(p, "ref11");
   const ean = field(p, "ean");
@@ -407,9 +412,9 @@ function renderMiniCard(p) {
   const desc = field(p, "descripcion") || field(p, "nombre") || "";
   const precio = formatPriceEUR(field(p, "precio"));
   const ref11 = field(p, "ref11");
-  const uneco = field(p, "uneco");
-  const familia = field(p, "fam");
-  const barra = field(p, "barra");
+  const uneco = padLeft(field(p, "uneco"), 3);
+  const familia = padLeft(field(p, "fam"), 3);
+  const barra = padLeft(field(p, "barra"), 5);
   const foto = field(p, "foto");
 
   const imgHtml = foto
