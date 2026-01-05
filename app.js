@@ -304,18 +304,12 @@ function formatPriceEUR(value) {
     // Si té coma, la coma és decimal; llevam punts de milers
     if (s.includes(",")) {
       s = s.replace(/\./g, "").replace(",", ".");
-    } else {
-      // Si NO té coma però té punt, pot ser decimal (EN) o milers.
-      // Heurística: si acaba amb .dd -> decimal, si no, és milers
+       } else {
       if (!/\.\d{1,2}$/.test(s)) s = s.replace(/\./g, "");
     }
-function padLeft(value, length) {
-  if (value == null || value === "") return "";
-  const s = value.toString().replace(/\D/g, "");
-  return s.padStart(length, "0");
-}
 
     num = Number(s);
+
   } else {
     // No té cap separador -> assumim cèntims (31900 -> 319.00)
     const digits = raw.replace(/\D/g, "");
@@ -329,6 +323,11 @@ function padLeft(value, length) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }) + " €";
+}
+function padLeft(value, length) {
+  if (value == null || value === "") return "";
+  const s = value.toString().replace(/\D/g, "");
+  return s.padStart(length, "0");
 }
 
 function renderQuickCard(p, query) {
