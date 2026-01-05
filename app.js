@@ -370,7 +370,7 @@ function renderQuickCard(p, query) {
 
         <div class="text-start small" style="max-width: 520px; margin: 0 auto;">
           ${ref11 ? `<p class="mb-1"><b>Ref. (11 dígitos)</b><br><span class="fs-5 fw-semibold">${escapeHtml(ref11)}</span></p>` : ""}
-               ${ean ? `<div class="fs-5 fw-semibold text-center">EAN ${escapeHtml(ean)}</div>` : ""}
+               ${ean ? `<div class="fs-5 fw-semibold text-center">EAN: ${escapeHtml(ean)}</div>` : ""}
                ${(uneco || familia || barra) ? `
   <div class="fs-5 fw-semibold text-center mt-2">
     REF: ${[uneco, familia, barra].filter(Boolean).map(escapeHtml).join(" ")}
@@ -427,7 +427,7 @@ function renderMiniCard(p) {
   if (rapid) badges.push(`<span class="badge text-bg-dark">${escapeHtml(rapid)}</span>`);
 
   // blocs centrats (només si hi ha dades)
-  const eanLine = ean ? `<div class="fw-semibold text-center mt-2">EAN ${escapeHtml(ean)}</div>` : "";
+  const eanLine = ean ? `<div class="fw-semibold text-center mt-2">EAN: ${escapeHtml(ean)}</div>` : "";
 
   const refNums = [uneco, familia, barra].filter(Boolean);
   const refLine = refNums.length
