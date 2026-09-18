@@ -347,7 +347,25 @@ function padLeft(value, length) {
   return s.padStart(length, "0");
 }
 
-\nfunction appleOfficialUrl(p) {\n  const part = field(p, "part").trim();\n  const ean = field(p, "ean").trim();\n  const desc = (field(p, "descripcion") || field(p, "nombre") || "").trim();\n  const term = part || ean || desc;\n  if (!term) return "";\n  return `https://www.apple.com/es/search/${encodeURIComponent(term)}?src=globalnav`;\n}\n\nfunction appleOfficialButton(p) {\n  const url = appleOfficialUrl(p);\n  if (!url) return "";\n  return `<a class="btn btn-sm btn-outline-dark apple-official-link"\n             href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"\n             onclick="event.stopPropagation()"> Ver en Apple</a>`;\n}\n\nfunction renderQuickCard(p, query) {
+
+function appleOfficialUrl(p) {
+  const part = field(p, "part").trim();
+  const ean = field(p, "ean").trim();
+  const desc = (field(p, "descripcion") || field(p, "nombre") || "").trim();
+  const term = part || ean || desc;
+  if (!term) return "";
+  return `https://www.apple.com/es/search/${encodeURIComponent(term)}?src=globalnav`;
+}
+
+function appleOfficialButton(p) {
+  const url = appleOfficialUrl(p);
+  if (!url) return "";
+  return `<a class="btn btn-sm btn-outline-dark apple-official-link"
+             href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"
+             onclick="event.stopPropagation()"> Ver en Apple</a>`;
+}
+
+function renderQuickCard(p, query) {
  const uneco = padLeft(field(p, "uneco"), 3);
  const familia = padLeft(field(p, "fam"), 3);
  const barra = padLeft(field(p, "barra"), 5);
