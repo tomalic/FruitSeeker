@@ -36,3 +36,40 @@ body { background: #f7f7f9; }
 .card .text-muted{
   line-height: 1.3;
 }
+
+
+/* Campo de búsqueda editable con botón para borrar */
+.search-input-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+}
+.search-input-wrap #q {
+  width: 100%;
+  padding-left: 3rem;
+  padding-right: 3rem;
+}
+.search-clear {
+  position: absolute;
+  right: .65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2.2rem;
+  height: 2.2rem;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #6c757d;
+  font-size: 1.8rem;
+  line-height: 2rem;
+  cursor: pointer;
+  display: none;
+}
+.search-clear.visible { display: block; }
+.search-clear:hover,
+.search-clear:focus {
+  background: rgba(0,0,0,.06);
+  color: #212529;
+  outline: none;
+}

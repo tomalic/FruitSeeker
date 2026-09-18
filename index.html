@@ -41,11 +41,13 @@
     ABC
   </button>
 </div>
-        <input id="q" type="text"
-       class="form-control form-control-lg text-center mx-auto"
-       autocomplete="off"
-       style="max-width: 520px;"
-       onfocus="this.value=''">
+        <div class="search-input-wrap mx-auto">
+          <input id="q" type="text"
+                 class="form-control form-control-lg text-center"
+                 autocomplete="off">
+          <button id="clearSearch" class="search-clear" type="button"
+                  aria-label="Borrar búsqueda" title="Borrar búsqueda">×</button>
+        </div>
         <div class="form-text">Se mostrarán todas las coincidencias.</div>
       </div>
     </div>

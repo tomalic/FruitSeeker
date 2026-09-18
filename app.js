@@ -621,3 +621,26 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("service-worker.js").catch(console.error);
   });
 }
+
+
+/* === FruitSeeker: camp de cerca editable + botó X === */
+document.addEventListener("DOMContentLoaded", () => {
+  const searchInput = document.getElementById("q");
+  const clearButton = document.getElementById("clearSearch");
+  if (!searchInput || !clearButton) return;
+
+  const refreshClearButton = () => {
+    clearButton.classList.toggle("visible", searchInput.value.length > 0);
+  };
+
+  searchInput.addEventListener("input", refreshClearButton);
+
+  clearButton.addEventListener("click", () => {
+    searchInput.value = "";
+    refreshClearButton();
+    searchInput.dispatchEvent(new Event("input", { bubbles: true }));
+    searchInput.focus();
+  });
+
+  refreshClearButton();
+});

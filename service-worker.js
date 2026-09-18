@@ -1,5 +1,5 @@
 // 🔄 Cambia esta versión en cada despliegue (ej: fecha o número)
-const CACHE_VERSION = 'v-2026-09-18-quicksearch-1'; 
+const CACHE_VERSION = "v-2026-09-18-editable-x-3"; 
 const CACHE_NAME = 'fruitseeker' + CACHE_VERSION;
 
 const ASSETS = [
