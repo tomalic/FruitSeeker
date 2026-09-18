@@ -1,5 +1,5 @@
 // 🔄 Cambia esta versión en cada despliegue (ej: fecha o número)
-const CACHE_VERSION = "v-2026-09-18-apple-link-fixed-5"; 
+const CACHE_VERSION = "v-2026-09-18-apple-link-safe-6"; 
 const CACHE_NAME = 'fruitseeker' + CACHE_VERSION;
 
 const ASSETS = [

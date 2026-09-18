@@ -360,8 +360,10 @@ function appleOfficialUrl(p) {
 function appleOfficialButton(p) {
   const url = appleOfficialUrl(p);
   if (!url) return "";
-  return `<a class="btn btn-sm btn-outline-dark apple-official-link"
-             href="${escapeAttr(url)}" target="_blank" rel="noopener noreferrer"
+  return `<a class="btn btn-sm btn-outline-dark mt-2"
+             href="${escapeAttr(url)}"
+             target="_blank"
+             rel="noopener noreferrer"
              onclick="event.stopPropagation()"> Ver en Apple</a>`;
 }
 
@@ -413,7 +415,7 @@ function renderQuickCard(p, query) {
 ` : ""}
 
         </div>
-        <div class="text-center mt-3">${appleOfficialButton(p)}</div>
+      <div class="text-center mt-3">${appleOfficialButton(p)}</div>
       </div>
     </div>
   `;
@@ -484,7 +486,7 @@ function renderMiniCard(p) {
             ${eanLine}
             ${refLine}
             ${extra.length ? `<div class="mt-2">${extra.join("")}</div>` : ""}
-            <div class="text-center mt-3">${appleOfficialButton(p)}</div>
+            <div class="mt-2">${appleOfficialButton(p)}</div>
           </div>
         </div>
       </div>
