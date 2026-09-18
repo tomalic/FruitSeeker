@@ -1,8 +1,8 @@
 /* FruitSeeker + QuickID hybrid
    - Upload CSV/XLSX
    - Search with ANY text (across all columns)
-   - If query is 4 digits -> prioritize EAN ending match
-     If query is 5 digits -> prioritize "barra" exact match
+   - If query is 4 or 5 digits -> match ending of EAN or BARRA
+   - Results with Quick ID are shown first
    - If only 1 result -> show the "Quick ID" big card
    - If multiple -> show list/table like FruitSeeker
 */
@@ -154,7 +154,7 @@ function handleFile(file) {
         rows = parseWorkbookToRows(wb);
       } else if (name.endsWith(".csv")) {
         const text = e.target.result; // readAsText
-        const wb = XLSX.read(text, { type: "string" });
+        const wb = XLSX.read(text, { type: "string", raw: true });
         rows = parseWorkbookToRows(wb);
       } else {
         throw new Error("Formato no soportado. Usa .csv o .xlsx");
@@ -196,10 +196,12 @@ function field(row, logical) {
 function doSearch(queryRaw) {
   const q = queryRaw.trim();
   const resultsEl = document.getElementById("results");
+
   if (!q) {
     resultsEl.innerHTML = "";
     return;
   }
+
   if (!products.length) {
     resultsEl.innerHTML = `<div class="alert alert-warning mb-0">Primero carga un CSV/XLSX.</div>`;
     return;
@@ -207,48 +209,63 @@ function doSearch(queryRaw) {
 
   const qNorm = normalize(q);
   const digitsOnly = q.replace(/\D/g, "");
-
   let matches = [];
 
-  // Priority mode for numeric quick lookup:
-  // - 4 digits => EAN ending match
-  // - 5 digits => Barra exact match
-  if (digitsOnly.length === q.length && (digitsOnly.length === 4 || digitsOnly.length === 5)) {
-    const eanHeader = colMap.ean;
-    const barraHeader = colMap.barra;
+  // Búsqueda rápida numérica:
+  // Si escribes exactamente 4 o 5 dígitos, busca esos dígitos al FINAL
+  // tanto del EAN como de BARRA.
+  if (digitsOnly === q && (digitsOnly.length === 4 || digitsOnly.length === 5)) {
+    matches = products.filter(p => {
+      const ean = field(p, "ean").replace(/\D/g, "");
+      const barraRaw = field(p, "barra").replace(/\D/g, "");
 
-    const special = products.filter(p => {
-      const ean = eanHeader ? (p[eanHeader] ?? "").toString().replace(/\D/g, "") : "";
-      const barra = barraHeader ? (p[barraHeader] ?? "").toString().replace(/\D/g, "") : "";
+      // BARRA debe tener 5 dígitos. Si al importar se perdió un 0 inicial,
+      // lo reconstruimos para la comparación.
+      const barra = barraRaw ? barraRaw.padStart(5, "0") : "";
 
-      if (digitsOnly.length === 4) {
-        return ean && ean.endsWith(digitsOnly);
-      }
-      // 5
-      return barra && barra === digitsOnly;
+      return (
+        (ean && ean.endsWith(digitsOnly)) ||
+        (barra && barra.endsWith(digitsOnly))
+      );
     });
-
-    if (special.length) {
-      matches = special;
-    }
   }
 
- // Fallback / general search across all fields (all terms, any order)
-if (!matches.length) {
-  const terms = qNorm.split(/\s+/).filter(Boolean); // paraules / trossos
+  // Búsqueda general: todas las palabras/trozos pueden estar en cualquier orden.
+  if (!matches.length) {
+    const terms = qNorm.split(/\s+/).filter(Boolean);
 
-  matches = products.filter(p => {
-    const blob = (p.__search || "");
-    return terms.every(t => blob.includes(t));
-  });
+    matches = products.filter(p => {
+      const blob = p.__search || "";
+      return terms.every(t => blob.includes(t));
+    });
+  }
+
+  // Evita duplicados.
+  matches = dedupeMatches(matches);
+
+  // Siempre mostrar primero los artículos que tienen ID rápida.
+  matches = sortQuickIdFirst(matches);
+
+  renderResults(q, matches);
 }
 
-// Deduplicate results (avoid repeated articles)
-matches = dedupeMatches(matches);
+function sortQuickIdFirst(rows) {
+  return rows
+    .map((row, index) => ({ row, index }))
+    .sort((a, b) => {
+      const aHasQuickId = field(a.row, "rapid").trim() !== "";
+      const bHasQuickId = field(b.row, "rapid").trim() !== "";
 
-renderResults(q, matches);
+      if (aHasQuickId !== bHasQuickId) {
+        return aHasQuickId ? -1 : 1;
+      }
 
+      // Mantiene el orden original entre productos del mismo grupo.
+      return a.index - b.index;
+    })
+    .map(item => item.row);
 }
+
 function dedupeMatches(rows) {
   const seen = new Set();
   const out = [];
